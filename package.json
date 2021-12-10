@@ -1,0 +1,8 @@
+{
+  "name": "adventofcode",
+  "version": "1.0.0",
+  "dependencies": {
+    "@types/node": "^16.11.12",
+    "fs": "^0.0.1-security"
+  }
+}

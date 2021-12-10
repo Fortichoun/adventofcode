@@ -1,0 +1,15 @@
+.DS_Store
+.idea
+/components/
+*.iml
+target
+/logs
+node_modules
+yarn-error.log
+*.log
+.vscode
+.tmp
+coverage
+*.tsbuildinfo
+.docker
+.declarations
