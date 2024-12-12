@@ -1,45 +1,37 @@
 const fs = require("fs");
 
 const data = fs.readFileSync("input2.txt", "utf8");
-const rows = data.split("\n")
-let count = 0
+const sentences = data.split("\n")
+const regexp = /mul\(\d{1,3},\d{1,3}\)/g
 
-rows.forEach(row => {
-    let values = row.split(' ')
-    const initialValues = [...values]
+const mergesSentences = sentences.join('')
 
-    loop1: for (let removeIndex = -1; removeIndex < values.length + 1; removeIndex++) {
-        let firstDiffSign = undefined
+const chunkedSentence = mergesSentences.split('don\'t()')
 
-        if (removeIndex !== -1) {
-            values = [...initialValues]
-            values.splice(removeIndex, 1)
+const count = chunkedSentence.reduce((doAcc, chunk, doIndex) => {
+    const doChunk = chunk.split('do()')
+
+    const doCount = doChunk.reduce((matchAcc, elem, currentIndex) => {
+
+        if (currentIndex === 0 && doIndex !== 0) {
+            return matchAcc
         }
+        const matches = elem.match(regexp)
 
-        console.log("values", values)
+        const matchCount = matches.reduce((acc, match) => {
+            const cleanedMatch = match.replace('mul(', '').replace(')', '')
+            const [first, second] = cleanedMatch.split(',')
 
-        loop2: for (let index = 0; index < values.length - 1; index++) {
-            const diff = values[index] - values[index + 1]
-            if (index === 0) {
-                firstDiffSign = Math.sign(diff)
-            }
+            const result = Number(first) * Number(second)
 
-            if (firstDiffSign !== Math.sign(diff)) {
-                break loop2;
-            }
+            return acc + result
+        }, 0)
 
-            const absDiff = Math.abs(diff)
+        return matchCount + matchAcc
+    }, 0)
 
-            if (absDiff > 3) {
-                break loop2;
-            }
+    return doAcc + doCount
+}, 0)
 
-            if (index === values.length - 2) {
-                count += 1
-                break loop1
-            }
-        }
-    }
-})
 
 console.log('count', count)
